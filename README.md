@@ -137,7 +137,22 @@ Given our data, which is only 4 points in the frequency-wavenumber space, we exp
 \text{Loss} = \sum_{i=1}^4 ( \text{Data}(f_i)- D(f_i, G ,\mu))^2
 ```
 
-Where D(f, G, μ) is the calculated dispersion curve, Data(f) is the data, and f = [f₁, f₂, f₃, f₄] are the selected frequencies. Then we utilize the Matlab tool fminsearch to minimize the calculate loss as function of G and μ.
+Where D(f, G, μ) is the calculated dispersion curve, Data(f) is the data, and f⃗ = [f₁, f₂, f₃, f₄] are the selected frequencies. Then we utilize the Matlab tool fminsearch to minimize the calculate loss as function of G and μ.
+
+<div style="display: flex; justify-content: space-between;">
+  <div style="flex: 1;">
+    <img src="./images/linear_fit_v1.jpg" alt="Linear Regression fit for simulated data with no noise" width="90%"/>
+    <p><strong>Fig 1.</strong> Linear Regression fit for simulated data with no noise.<br/>
+    Initial Guess: G₀ = 30E3, μ₀ = 30E3<br/>
+    Fit D-Curve: G = 30E3, μ = 30E3</p>
+  </div>
+  <div style="flex: 1;">
+    <img src="./images/linear_fit_w_noise_v1.jpg" alt="Linear Regression Fit for simulated data with added noise" width="90%"/>
+    <p><strong>Fig 2.</strong> Linear Regression Fit for simulated data with added noise of SNR = 20<br/>
+    Initial Guess: G₀ = 30E3, μ₀ = 30E3<br/>
+    Fit D-Curve: G = 29.8E3, μ = 162.6E3</p>
+  </div>
+</div>
 
 ## Results
 
@@ -145,14 +160,12 @@ Looking at the dispersion curves for a range of G and μ values between [2E4, 2E
 
 To visualize the robustness of the linear fit to noise, we created a contour plot of the gaussian distribution of G and Mu values for SNR of 20. There is significant clustering around the actual G and Mu values, however there are significant numbers of outliers and a lack of precision. The reason for this is most likely due to random noise on the 4 data points averaging out to lowering the fit, causing the G and μ parameters to become unstable, with values rapidly increasing to unreasonable values.
 
-### Key Findings:
+![Dispersion curves of various G values](./images/GPlot_v4.jpg)
+**Fig 3.** Dispersion curves of various G values for μ₀ = 4e6. The lines represent the dispersion curves of the G values between [20kpa, 2000kpa].
 
-1. Linear regression fit for simulated data with no noise:
-   - Initial Guess: G₀ = 30E3, μ₀ = 30E3
-   - Fit D-Curve: G = 30E3, μ = 30E3
+![Dispersion curves of various μ values](./images/Muplot_v2.jpg)
+**Fig 4.** Dispersion curves of various μ values for G₀ = 25.6 kpa. The lines represent the dispersion curves of the μ values between [20kpa, 2000kpa].
 
-2. Linear regression fit for simulated data with added noise (SNR = 20):
-   - Initial Guess: G₀ = 30E3, μ₀ = 30E3
-   - Fit D-Curve: G = 29.8E3, μ = 162.6E3
-
+![Fitted G and μ values](./images/banana_plot_v1.jpg)
+**Fig 5.** Fitted G and μ values for G = 30E3, μ = 30E3 with SNR = 20 for 100 iterations.
 
