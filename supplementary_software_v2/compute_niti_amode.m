@@ -69,6 +69,7 @@ function c = compute_niti_amode(f, k, h, G, mu, lambda, rho, rho_l, c_l)
         [~, detM] = compute_niti_kappa(f(nfreq - n), ktest, h, G, mu, lambda, rho, rho_l, c_l);
         [~, locs] = findpeaks(-abs(detM));
         cpeaks = f(end)./ktest(locs);
+        %disp(cpeaks);
         kinit = f(end)/min(cpeaks);
         
         % Refine estimate
