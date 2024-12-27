@@ -4,7 +4,7 @@
 % data. With the constraints that G must be positive > 1e3.
 
 %load the data
-data = readmatrix('/Users/calvinsmith/Bouma_lab/NITI_project/Dispersion_Data/Experimental_Data/RabbitCornea_IOP12.xlsx');
+data = readmatrix('/Users/calvinsmith/Bouma_lab/NITI_project/Dispersion_Data/Experimental_Data/kMeans_subject6.csv');
 
 %recover the selected frequences, k_values at selected frequencies, and
 %stdv
