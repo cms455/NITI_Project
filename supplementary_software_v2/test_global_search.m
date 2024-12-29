@@ -1,12 +1,11 @@
-
 %load the data
-data = readmatrix('/Users/calvinsmith/Bouma_lab/NITI_project/Dispersion_Data/Experimental_Data/kMeans_subject6.csv');
-
+data = readmatrix('/Users/calvinsmith/Bouma_lab/NITI_project/Dispersion_Data/Experimental_Data/kMeans_Subj11.csv');
+subject = 'Subject11';
 %recover the selected frequences, k_values at selected frequencies, and
 %stdv
 selected_freq = [944, 1335, 1660, 2115];
 VdB_samples = data();
-VdB_samples(5,:)= [];
+
 
 % Generate F and K Ranges:
 f_max = ceil(max(selected_freq));
@@ -37,6 +36,7 @@ c_l = 1480;    % Speed of sound in liquid (m/s)
 cp = 1540;     % Phase velocity (m/s)
 h = 800E-6;    % Thickness (m)
 G0 = 40E3;     % Initial guess for G (Pa)
+mu_factor = 110/3;
 
 kfit_holder = cell(num_samples);
 G_opt_holder = zeros(1,num_samples);
@@ -44,7 +44,7 @@ mu_opt_holder = zeros(1,num_samples);
 
 for s = 1:num_samples
     VdB = squeeze(VdB_samples(s,:));
-    G_list = [10e3, 20e3, 30e3, 40e3, 50e3,60e3, 70e3, 80e3];
+    G_list = [5e3, 10e3, 20e3, 30e3, 40e3, 50e3,60e3, 70e3, 80e3];
     G_loss = zeros(1,length(G_list));
     for i = 1:length(G_list)
         G_loss(i)  = calc_niti_amode_loss(f, k, VdB, h, f_reduced_idx, G_list(i), mu_factor*G_list(i) , rho, rho_l, c_l, cp);
@@ -52,7 +52,6 @@ for s = 1:num_samples
     end
     [~, G_idx] = min(G_loss);
     G0 = G_list(G_idx);
-    mu_factor = 110; % mu = mu_factor*G;
     mu0 = G0*mu_factor;    % Initial guess for mu (Pa)
 
     [G_opt, mu_opt, mu_opt_div_G, kfit_final]= fit_data_to_curve_no_constraint(rho, rho_l, c_l, ...
@@ -73,6 +72,18 @@ xlabel('Frequency (1/s)')
 ylabel('Wave-number (1/m)')
 set(gca, 'FontSize', 14);
 
+id = round(1000*rand(1));
+
+save_folder  = '/Users/calvinsmith/Bouma_lab/NITI_project/Dispersion_Data/Saved_Results/';
+save_k_name = ['kfit_holder_',subject,'_', num2str(id)];
+save_k_path = [save_folder,save_k_name];
+
+save_G_name = ['G_opt_holder_',subject, '_', num2str(id)];
+save_G_path = [save_folder,save_G_name];
+
+save(save_k_path, 'kfit_holder');
+save(save_G_path,'G_opt_holder');
+
 
 function loss = calc_niti_amode_loss(f, k, VdB, h, f_reduced_idx, G, mu, rho, rho_l, c_l, cp)
 % Calculate lambda
@@ -88,3 +99,6 @@ for n = 1:length(VdB)
     loss = loss + (VdB(n) - kfit(f_idx))^2;
 end
 end
+
+
+plot_fit_data(kfit_holder, G_opt_holder, mu_factor, subject, VdB_samples,f,k, f_reduced_idx);

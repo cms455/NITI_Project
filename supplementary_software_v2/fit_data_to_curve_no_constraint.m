@@ -33,8 +33,8 @@ function [G_opt, mu_opt, mu_opt_div_G, kfit_final] = fit_data_to_curve(rho, rho_
 
     % Perform optimization + Optimization Constraints
      opts = optimset('Display', 'iter', ...
-        'TolX', 1e-1, ...         % Final convergence tolerance for the step size
-        'TolFun', 1e-1);      % Final convergence tolerance for the function value
+        'TolX', 1e-0, ...         % Final convergence tolerance for the step size
+        'TolFun', 1e-0);      % Final convergence tolerance for the function value
 
     figure; 
     hold on;
@@ -61,7 +61,7 @@ function [G_opt, mu_opt, mu_opt_div_G, kfit_final] = fit_data_to_curve(rho, rho_
     scatter(f(f_reduced_idx), VdB * 1e-3, 'b');
     plot(f, kfit * 1e-3, 'r-', 'LineWidth', 2);
     plot(f, kfit_0 * 1e-3, 'g--', 'LineWidth', 2)
-    legend('Measured Data', 'Data Points', 'Fitted Curve', 'Original Guess');
+    legend('Measured Data', 'Data Points', 'Fitted Curve', 'Original Guess', 'Location','best');
     xlabel('Frequency (1/s)')
     ylabel('Wavenumber (1/m)')
     set(gca, 'FontSize', 20);

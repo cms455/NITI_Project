@@ -1,8 +1,13 @@
-num_samples = length(kfit_holder);
-mu_factor = 110/3;
-figure;
-hold on;
+function plot_fit_data(kfit_holder, G_opt_holder, mu_factor, subject, VdB_samples,f,k, f_reduced_idx)
 
+num_samples = length(kfit_holder);
+
+rho = 1000;    % Density of material (kg/m^3)
+rho_l = 1000;  % Density of liquid (kg/m^3)
+c_l = 1480;    % Speed of sound in liquid (m/s)
+cp = 1540;     % Phase velocity (m/s)
+h = 800E-6;    % Thickness (m)
+mu_factor = 110/3;
 % Generate a colormap with enough unique colors for all samples
 colors = lines(num_samples); % Use 'lines' colormap for distinct colors
 
@@ -22,7 +27,7 @@ for s = 1:num_samples
         'DisplayName', ['K Sample ', num2str(s)],'LineWidth',1);
 end
 
-title('Dispersion Curves for Rabbit');
+title(sprintf('Dispersion Curves for %s', subject));
 xlabel('Frequency (1/s)');
 ylabel('Wave-number (1/mm)');
 set(gca, 'FontSize', 14);
@@ -42,7 +47,7 @@ for s = 1:num_samples
     color = colors(s, :);
 
     % Plot kfit_final with unique color
-    plot(f(1,1:end),kfit_final, '-', 'Color', color, 'LineWidth', 2, ...
+    plot(f(1,1:1172),kfit_final, '-', 'Color', color, 'LineWidth', 2, ...
         'DisplayName', ['Kfit Sample ', num2str(s)]);
 
     % Plot VdB data points with the same color but with markers
@@ -51,7 +56,7 @@ for s = 1:num_samples
     kfit_sum = kfit_sum + kfit_final;
 end
 
-title('Dispersion Curves for Rabbit');
+title(sprintf('Dispersion Curves for %s', subject));
 xlabel('Frequency (1/s)');
 ylabel('Wave-number (1/mm)');
 set(gca, 'FontSize', 14);
@@ -83,7 +88,7 @@ plot(kfit_avg*1e-3,'Linewidth',2,'DisplayName','Sample K Average');
 plot(kfit_G_avg*1e-3,'Linewidth',2,'DisplayName','Kfit G Averge');
 plot(kfit_avg_opt*1e-3,'Linewidth',2,'DisplayName','Sample K Average Fit');
 
-title('Averaged Sample K for Rabbit');
+title(sprintf('Averaged Sample K for %s', subject));
 xlabel('Frequency (1/s)');
 ylabel('Wave-number (1/mm)');
 set(gca, 'FontSize', 14);
@@ -92,3 +97,4 @@ hold off;
 
 disp(sprintf('Average G: %d', G_avg));
 disp(sprintf('Averaged Ks fit G : %d', G_opt));
+end
