@@ -36,10 +36,10 @@ end
 legend(plot_handles, legend_entries, 'Location', 'best', 'FontSize', 10);
 
 % Set axis labels and title
-xlabel('Frequency (1/s)', 'FontSize', 20);
-ylabel('Wave Number (1/m)', 'FontSize', 20);
+xlabel('Frequency [Hz]', 'FontSize', 20);
+ylabel('Wavenumber [1/mm)]', 'FontSize', 20);
 %title('Gradient Color Plot of kfit vs Frequency for Different \mu Values');
 
 % Finalize the figure
-grid on;
+set(gca, 'FontSize',14);
 hold off;

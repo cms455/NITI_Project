@@ -22,7 +22,7 @@ for s = 1:num_samples
         'DisplayName', ['K Sample ', num2str(s)],'LineWidth',1);
 end
 
-title('Dispersion Curves for Rabbit');
+title('Dispersion Curves for Subject 11');
 xlabel('Frequency (1/s)');
 ylabel('Wave-number (1/mm)');
 set(gca, 'FontSize', 14);
@@ -51,7 +51,7 @@ for s = 1:num_samples
     kfit_sum = kfit_sum + kfit_final;
 end
 
-title('Dispersion Curves for Rabbit');
+title('Dispersion Curves for Subject 11');
 xlabel('Frequency (1/s)');
 ylabel('Wave-number (1/mm)');
 set(gca, 'FontSize', 14);
@@ -83,7 +83,7 @@ plot(kfit_avg*1e-3,'Linewidth',2,'DisplayName','Sample K Average');
 plot(kfit_G_avg*1e-3,'Linewidth',2,'DisplayName','Kfit G Averge');
 plot(kfit_avg_opt*1e-3,'Linewidth',2,'DisplayName','Sample K Average Fit');
 
-title('Averaged Sample K for Rabbit');
+title('Averaged Sample K for Subject 11');
 xlabel('Frequency (1/s)');
 ylabel('Wave-number (1/mm)');
 set(gca, 'FontSize', 14);

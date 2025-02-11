@@ -21,6 +21,7 @@ for n = 1:num_G
     
     % Fixed parameters
     mu0 = 4e6; 
+    lambda = rho * cp^2 - 2 * mu0;
     cfit = compute_niti_amode(f, k, h, G0, mu0, lambda, rho, rho_l, c_l);
     kfit = f(:) ./ cfit(:);
     
@@ -29,17 +30,17 @@ for n = 1:num_G
     plot_handles(n) = plot(f, kfit, 'Color', colors(color_index, :), 'LineWidth', 2);
     
     % Add entry to legend
-    legend_entries{n} = sprintf('G0 = %d kPa', G0 / 1e3); % Convert back to kPa for legend
+    legend_entries{n} = sprintf('G = %d kPa', G0 / 1e3); % Convert back to kPa for legend
 end
 
 % Add the legend
 legend(plot_handles, legend_entries, 'Location', 'best', 'FontSize', 10);
 
 % Set axis labels and title
-xlabel('Frequency (1/s)', 'FontSize', 20);
-ylabel('Wave Number (1/m)', 'FontSize', 20);
+xlabel('Frequency [Hz]', 'FontSize', 20);
+ylabel('Wavenumber [1/mm]', 'FontSize', 20);
 %title('Gradient Color Plot of kfit vs Frequency for Different G0 Values');
 
 % Finalize the figure
-grid on;
+set(gca,'FontSize',14);
 hold off;

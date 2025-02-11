@@ -1,4 +1,4 @@
-function [G_opt, mu_opt, mu_opt_div_G, kfit_final] = fit_data_to_curve(rho, rho_l, c_l, cp, h, G0, mu0, mu_factor, f,k, VdB, f_reduced_idx)
+function [G_opt, mu_opt, mu_opt_div_G, kfit_final] = fit_data_to_curve_no_constraint(rho, rho_l, c_l, cp, h, G0, mu0, mu_factor, f,k, VdB, f_reduced_idx)
     if nargin < 1
         rho = 1000;    % Density of material (kg/m^3)
     end

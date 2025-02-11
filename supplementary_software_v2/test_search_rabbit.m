@@ -1,11 +1,18 @@
 %load the data
-data = readmatrix('/Users/calvinsmith/Bouma_lab/NITI_project/Dispersion_Data/Experimental_Data/kMeans_Subj11.csv');
-subject = 'Subject11';
+data = readmatrix('/Users/calvinsmith/Bouma_lab/NITI_project/Dispersion_Data/Experimental_Data/kMeans_Rab.csv');
+subject ='Rabbit';
+
 %recover the selected frequences, k_values at selected frequencies, and
 %stdv
-selected_freq = [944, 1335, 1660, 2115];
-VdB_samples = data();
+selected_freq = data(1,2:end);
 
+VdB_samples = data(2:end,2:end);
+%VdB_samples(5,:) = [];
+num_samples = size(VdB_samples,1);
+
+error_data = readmatrix('/Users/calvinsmith/Bouma_lab/NITI_project/Dispersion_Data/Experimental_Data/kStdv_Rab.csv');
+%error_data(5,:) = [];
+error_data = error_data(2:end,2:end);
 
 % Generate F and K Ranges:
 f_max = ceil(max(selected_freq));
@@ -41,24 +48,29 @@ mu_factor = 110/3;
 kfit_holder = cell(num_samples);
 G_opt_holder = zeros(1,num_samples);
 mu_opt_holder = zeros(1,num_samples);
+confidence_interval_holder = cell(1,num_samples);
 
 for s = 1:num_samples
     VdB = squeeze(VdB_samples(s,:));
-    G_list = [5e3, 10e3, 20e3, 30e3, 40e3, 50e3,60e3, 70e3, 80e3];
+    VdB_error = squeeze(error_data(s,:));
+    G_list = [5e3, 10e3, 15e3, 20e3, 25e3, 30e3, 35e3, 40e3,50e3, 60e3];
     G_loss = zeros(1,length(G_list));
+    
     for i = 1:length(G_list)
         G_loss(i)  = calc_niti_amode_loss(f, k, VdB, h, f_reduced_idx, G_list(i), mu_factor*G_list(i) , rho, rho_l, c_l, cp);
         disp(sprintf('Loss of %d: %d', G_list(i), G_loss(i)));
     end
+    
     [~, G_idx] = min(G_loss);
     G0 = G_list(G_idx);
     mu0 = G0*mu_factor;    % Initial guess for mu (Pa)
 
-    [G_opt, mu_opt, mu_opt_div_G, kfit_final]= fit_data_to_curve_no_constraint(rho, rho_l, c_l, ...
-        cp, h, G0, mu0, mu_factor, f,k,VdB,f_reduced_idx);
+    [G_opt, mu_opt, mu_opt_div_G, kfit_final, confidence_interval]= fit_data_to_curve_lsq(rho, rho_l, c_l, ...
+        cp, h, G0, mu0, mu_factor, f,k,VdB,f_reduced_idx, VdB_error);
     kfit_holder{s} = kfit_final;
     G_opt_holder(s) = G_opt;
     mu_opt_holder(s) = mu_opt;
+    confidence_interval_holder{s} = confidence_interval;
 end
 
 figure;
@@ -74,13 +86,18 @@ set(gca, 'FontSize', 14);
 
 id = round(1000*rand(1));
 
-save_folder  = '/Users/calvinsmith/Bouma_lab/NITI_project/Dispersion_Data/Saved_Results/';
+save_folder  = '/Users/calvinsmith/Bouma_lab/NITI_project/Dispersion_Data/Saved_Results/Final_Results/';
+
 save_k_name = ['kfit_holder_',subject,'_', num2str(id)];
 save_k_path = [save_folder,save_k_name];
 
 save_G_name = ['G_opt_holder_',subject, '_', num2str(id)];
 save_G_path = [save_folder,save_G_name];
 
+save_ci_name = ['confidence_interval_holder_',subject, '_', num2str(id)];
+save_ci_path = [save_folder,save_ci_name];
+
+save(save_ci_path, 'confidence_interval_holder');
 save(save_k_path, 'kfit_holder');
 save(save_G_path,'G_opt_holder');
 
@@ -101,4 +118,4 @@ end
 end
 
 
-plot_fit_data(kfit_holder, G_opt_holder, mu_factor, subject, VdB_samples,f,k, f_reduced_idx);
+plot_fit_data_v2(kfit_holder, G_opt_holder, confidence_interval_holder, mu_factor, subject, VdB_samples,f,k, f_reduced_idx);
